@@ -4,7 +4,7 @@ body {
     background-image: radial-gradient(circle at center, rgba(30, 30, 30, 0.8) 0%, rgba(0, 0, 0, 1) 100%);
     
     color: #f0e68c; 
-    font-family: 'Playfair Display', serif; /* Changed to Playfair for main body font */
+    font-family: 'Playfair Display', serif; 
     margin: 0;
     padding: 20px;
     text-align: center;
@@ -14,7 +14,7 @@ body {
 }
 
 /* ------------------------------------------------ */
-/* CUSTOM FIREWORK CURSOR STYLES (PURE CSS POT + ANIMATED SAND) */
+/* CUSTOM FIREWORK CURSOR STYLES */
 /* ------------------------------------------------ */
 #custom-cursor {
     position: fixed;
@@ -31,73 +31,6 @@ body {
     transition: transform 0.1s ease-out, background-color 0.2s, box-shadow 0.2s; 
     display: block; 
     background-image: none;
-}
-
-/* Specific styling for the Rangoli pot cursor - using pure CSS */
-#rangoli-modal.active-modal #custom-cursor {
-    width: 30px; /* Base size of the pot */
-    height: 30px;
-    background-color: transparent; 
-    box-shadow: none; 
-    border-radius: 0; 
-    transform: translate(-50%, -50%) rotate(10deg); 
-    position: relative; 
-    overflow: visible; 
-    animation: none; 
-}
-
-/* The pot's body (::before) */
-#rangoli-modal.active-modal #custom-cursor::before {
-    content: ''; 
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #8B4513; /* Earthy brown for the pot */
-    border-radius: 50% / 60% 60% 40% 40%; /* Pot shape */
-    border: 2px solid #654321;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
-    z-index: 1;
-}
-
-/* The pot's opening/rim (::after) */
-#rangoli-modal.active-modal #custom-cursor::after {
-    content: ''; 
-    position: absolute;
-    top: -5px; 
-    left: -2px; 
-    width: 34px; 
-    height: 8px;
-    background-color: #A0522D; /* Lighter brown for rim */
-    border-radius: 50%;
-    z-index: 2;
-    border: 1px solid #654321;
-}
-
-/* The "sand pouring" element (the <span> we added to HTML) */
-#rangoli-modal.active-modal #custom-cursor .sand-stream {
-    content: '';
-    position: absolute;
-    bottom: -10px; 
-    left: 55%; 
-    width: 5px;
-    height: 15px;
-    background-color: var(--active-brush-color, #FFD700); 
-    border-radius: 20%;
-    opacity: 0; 
-    transform: scaleY(0); 
-    transform-origin: top;
-    animation: pour-sand 0.8s infinite linear;
-    z-index: 0; 
-}
-
-@keyframes pour-sand {
-    0% { opacity: 0; transform: scaleY(0); }
-    10% { opacity: 1; transform: scaleY(0.2); }
-    50% { opacity: 1; transform: scaleY(1); }
-    80% { opacity: 0.5; transform: scaleY(0.5); }
-    100% { opacity: 0; transform: scaleY(0); }
 }
 
 
@@ -118,7 +51,7 @@ h1 {
 }
 
 p {
-    font-family: 'Merriweather', serif; /* Restored Merriweather for body copy */
+    font-family: 'Merriweather', serif; 
     font-size: 1.2em;
     margin-top: -10px;
 }
@@ -306,30 +239,7 @@ body::before {
     margin-left: 10px;
 }
 
-#launch-rangoli-btn {
-    padding: 10px 15px;
-    
-    /* Terracotta Pot Styling */
-    background: #a0522d; 
-    color: #FFF;
-    border: 3px solid #ffd700; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-    
-    font-weight: bold;
-    border-radius: 8px; 
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 20px;
-    width: 100%;
-    
-    font-family: 'Playfair Display', serif;
-}
-
-#launch-rangoli-btn:hover {
-    background: #8B4513; 
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 8px rgba(0,0,0,0.7); 
-}
+/* RANGOLI BUTTON REMOVED */
 
 /* ------------------------------------------------ */
 /* CODED FIREWORK ICONS */
@@ -396,7 +306,7 @@ body::before {
 /* ROCKET TRAJECTORY */
 @keyframes rocket-rise {
     0% { opacity: 1; transform: translateY(0); }
-    80% { opacity: 1; transform: translateY(var(--y-rise)); }
+    80% { opacity: 1; transform: transform: translateY(var(--y-rise)); }
     100% { opacity: 0; transform: translateY(var(--y-rise)); }
 }
 
@@ -429,124 +339,7 @@ body::before {
 }
 
 
-/* ------------------------------------------------ */
-/* RANGOLI MODAL STYLES */
-/* ------------------------------------------------ */
-.hidden-modal {
-    display: none;
-}
-
-#rangoli-modal {
-    position: fixed;
-    z-index: 1000; 
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.95); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    cursor: default; 
-}
-
-#rangoli-modal.active-modal {
-    display: flex; 
-}
-
-
-.modal-content {
-    background-color: #1a1a1a;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-    width: 90%;
-    max-width: 600px; 
-    text-align: center;
-    position: relative;
-}
-
-.close-btn {
-    color: #ffd700;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-}
-
-/* --- Rangoli Palette --- */
-#rangoli-palette {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-    border-radius: 6px;
-    background: #222;
-}
-
-.color-swatch {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: transform 0.1s;
-}
-
-.color-swatch:hover {
-    transform: scale(1.1);
-}
-
-.color-swatch.active {
-    border-color: #ffd700;
-    transform: scale(1.1);
-}
-
-/* --- Rangoli Canvas Styles --- */
-#rangoli-canvas {
-    background-color: #111111;
-    border: 5px solid #ffd700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    touch-action: none; 
-}
-
-
-/* --- Actions and Share Message --- */
-#rangoli-actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-#rangoli-actions button {
-    padding: 10px 15px;
-    border: none;
-    background: #ff9900;
-    color: #222;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-#rangoli-actions button:hover {
-    background: #ffd700;
-}
-
-#share-link-message {
-    color: #00FF7F; 
-    word-break: break-all;
-    margin-top: 15px;
-    padding: 10px;
-    background: #00800033;
-    border-radius: 6px;
-}
+/* RANGOLI MODAL STYLES REMOVED */
 
 
 /* Media Queries */

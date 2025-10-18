@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             activeFirework = { type: option.dataset.type, color: option.dataset.color };
 
+            // Reset cursor to default firework style
             customCursor.style.display = 'block'; 
             customCursor.style.width = '10px'; 
             customCursor.style.height = '10px';
@@ -69,11 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
             customCursor.style.backgroundImage = 'none';
             customCursor.style.transform = 'translate(-50%, -50%)'; 
             
-            const existingSandStream = customCursor.querySelector('.sand-stream');
-            if (existingSandStream) {
-                existingSandStream.remove();
-            }
-
             const cursorColor = activeFirework.color === 'multi' ? '#FFF' : activeFirework.color;
             customCursor.style.backgroundColor = cursorColor;
             customCursor.style.boxShadow = `0 0 5px ${cursorColor}, 0 0 10px ${cursorColor}`;
@@ -88,14 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.addEventListener('mousemove', (e) => {
-        if (!rangoliModal.classList.contains('active-modal') || (rangoliModal.classList.contains('active-modal') && isDrawing)) {
-             customCursor.style.left = `${e.clientX}px`;
-             customCursor.style.top = `${e.clientY}px`;
-        }
+        // Since Rangoli is removed, we just move the firework cursor
+        customCursor.style.left = `${e.clientX}px`;
+        customCursor.style.top = `${e.clientY}px`;
     });
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('#firework-menu') && !e.target.closest('.diya-base') && !rangoliModal.classList.contains('active-modal')) {
+        if (!e.target.closest('#firework-menu') && !e.target.closest('.diya-base')) {
             const { type, color } = activeFirework;
             
             if (type === 'rocket') {
@@ -210,171 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, rocketDuration);
     }
-
-    // -----------------------------------------------------------------
-    // 3. RANGOLI BUILDER LOGIC - MAIN FUNCTIONALITY
-    // -----------------------------------------------------------------
     
-    const rangoliModal = document.getElementById('rangoli-modal');
-    const rangoliCanvas = document.getElementById('rangoli-canvas');
-    const ctx = rangoliCanvas.getContext('2d');
-    const launchRangoliBtn = document.getElementById('launch-rangoli-btn');
-    const closeRangoliBtn = document.getElementById('close-rangoli-btn'); 
-    const paletteSwatches = rangoliModal.querySelectorAll('.color-swatch');
-    const clearDesignBtn = document.getElementById('clear-design-btn');
-    const saveDesignBtn = document.getElementById('save-design-btn');
-    const shareLinkMessage = document.getElementById('share-link-message');
-
-    let isDrawing = false;
-    let activeBrushColor = '#FFD700'; 
-    const BRUSH_BASE_SIZE = 4;
-    const BRUSH_JITTER_RANGE = 4;
-    const BACKGROUND_COLOR = '#111111';
-
-    // --- Modal Control ---
-    function openRangoliModal() {
-        rangoliModal.classList.add('active-modal'); 
-        
-        // Transform custom cursor into the CSS pot
-        customCursor.style.width = '30px'; 
-        customCursor.style.height = '30px';
-        customCursor.style.borderRadius = '0';
-        customCursor.style.backgroundColor = 'transparent'; 
-        customCursor.style.boxShadow = 'none'; 
-        customCursor.style.transform = 'translate(-50%, -50%) rotate(10deg)'; 
-        
-        // Create and append the sand stream element
-        let sandStream = customCursor.querySelector('.sand-stream');
-        if (!sandStream) {
-            sandStream = document.createElement('span');
-            sandStream.classList.add('sand-stream');
-            customCursor.appendChild(sandStream);
-        }
-        sandStream.style.setProperty('--active-brush-color', activeBrushColor);
-    }
-
-    function closeRangoliModal() {
-        rangoliModal.classList.remove('active-modal'); 
-        
-        // Remove the sand stream element
-        const existingSandStream = customCursor.querySelector('.sand-stream');
-        if (existingSandStream) {
-            existingSandStream.remove();
-        }
-
-        // Reset cursor to default firework mode
-        customCursor.style.display = 'block';
-        customCursor.style.width = '10px'; 
-        customCursor.style.height = '10px';
-        customCursor.style.borderRadius = '50%';
-        customCursor.style.backgroundImage = 'none';
-        
-        const currentActiveOption = document.querySelector('.firework-option.active');
-        if (currentActiveOption) {
-            const cursorColor = currentActiveOption.dataset.color === 'multi' ? '#FFF' : currentActiveOption.dataset.color;
-            customCursor.style.backgroundColor = cursorColor;
-            customCursor.style.boxShadow = `0 0 5px ${cursorColor}, 0 0 10px ${cursorColor}`;
-            customCursor.style.transform = 'translate(-50%, -50%)'; 
-        }
-        shareLinkMessage.classList.add('hidden-modal');
-    }
-    
-    // Attach event listeners to the launch and close buttons
-    launchRangoliBtn.addEventListener('click', () => {
-        openRangoliModal();
-        // Crucial: Only initialize the canvas to a blank state here, not via the load function
-        initCanvas(); 
-    });
-    
-    // FIX: Close button functionality
-    closeRangoliBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); 
-        closeRangoliModal(); 
-    });
-    
-    // Allows clicking outside the modal to close it (this was already working)
-    rangoliModal.addEventListener('click', (e) => { 
-        if (e.target.id === 'rangoli-modal') {
-            closeRangoliModal();
-        }
-    });
-
-    // --- Drawing Functions ---
-    function initCanvas() {
-        rangoliCanvas.width = 500;
-        rangoliCanvas.height = 500;
-        
-        ctx.fillStyle = BACKGROUND_COLOR;
-        ctx.fillRect(0, 0, rangoliCanvas.width, rangoliCanvas.height);
-        
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-    }
-    // ... (Drawing logic drawSand, event listeners omitted for brevity)
-
-    // --- Palette Control ---
-    paletteSwatches.forEach(swatch => {
-        const color = swatch.dataset.color;
-        swatch.style.backgroundColor = color;
-        
-        swatch.addEventListener('click', () => {
-            paletteSwatches.forEach(s => s.classList.remove('active'));
-            swatch.classList.add('active');
-            activeBrushColor = color;
-            const sandStream = customCursor.querySelector('.sand-stream');
-            if (sandStream) {
-                sandStream.style.setProperty('--active-brush-color', activeBrushColor);
-            }
-        });
-        
-        if (swatch.classList.contains('active')) {
-            activeBrushColor = color;
-        }
-    });
-
-    // --- Clear Design ---
-    clearDesignBtn.addEventListener('click', () => {
-        initCanvas();
-        shareLinkMessage.classList.add('hidden-modal');
-    });
-    
-    // --- Save/Share Logic (Uses Canvas Data URL) ---
-    saveDesignBtn.addEventListener('click', () => {
-        const designDataURL = rangoliCanvas.toDataURL('image/png');
-        const shareURL = `${window.location.origin}${window.location.pathname}?rangoli_data=${encodeURIComponent(designDataURL)}`;
-        shareLinkMessage.textContent = `Link copied! Share with me to show off your art!`;
-        shareLinkMessage.classList.remove('hidden-modal');
-        navigator.clipboard.writeText(shareURL)
-            .then(() => {})
-            .catch(() => {
-                 shareLinkMessage.textContent = `[Error: Copy manually] ${shareURL}`;
-            });
-    });
-
-    // --- Load Design from URL (CORRECTED BEHAVIOR) ---
-    function loadDesignFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const designData = urlParams.get('rangoli_data');
-        
-        if (designData) {
-            const img = new Image();
-            img.onload = function() {
-                // Initialize canvas to clear previous state
-                initCanvas(); 
-                ctx.drawImage(img, 0, 0, rangoliCanvas.width, rangoliCanvas.height);
-                
-                // ONLY open the modal if a design is loaded from the URL
-                openRangoliModal(); 
-                rangoliModal.querySelector('h2').textContent = "Look at the beautiful Rangoli you designed!";
-                shareLinkMessage.classList.add('hidden-modal');
-            };
-            img.src = decodeURIComponent(designData);
-        } else {
-            // Initialize canvas to blank state on first load if no URL data is present
-            initCanvas(); 
-        }
-    }
-    
-    // Initial call: This handles loading a shared design OR initializing the page blank.
-    loadDesignFromURL(); 
+    // NOTE: All previous Rangoli modal functions (openRangoliModal, closeRangoliModal, loadDesignFromURL) 
+    // and listeners have been completely removed.
 });
