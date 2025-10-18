@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Diwali, My Love!</title>
+    <link rel="stylesheet" href="style.css">
+    
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Merriweather:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div id="custom-cursor">
+        <span class="sand-stream"></span>
+    </div>
+    
+    <header>
+        <h1>Happy Diwali, My Love!</h1>
+        <p>Your light makes my world brighter. Find the hidden flames...</p>
+    </header>
+
+    <main class="diya-grid">
+        
+        <div class="hidden-diya-wrapper">
+            <div class="diya-base" data-video-id="video1">
+                <div class="diya-flame"></div>
+            </div>
+            <video id="video1" class="hidden-video" controls loop>
+                <source src="videos/clip1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        
+        <div class="hidden-diya-wrapper">
+            <div class="diya-base" data-video-id="video2">
+                <div class="diya-flame"></div>
+            </div>
+            <video id="video2" class="hidden-video" controls loop>
+                <source src="videos/clip2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        
+        <div class="hidden-diya-wrapper">
+            <div class="diya-base" data-video-id="video3">
+                <div class="diya-flame"></div>
+            </div>
+            <video id="video3" class="hidden-video" controls loop>
+                <source src="videos/clip3.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        
+        </main>
+
+    <div id="firework-menu">
+        <div class="menu-title">Select Spark:</div>
+        
+        <div class="firework-option" data-type="heart" data-color="#FF69B4" data-name="Love Bloom">
+            <div class="icon-heart"></div>
+            <span>Love Bloom</span>
+        </div>
+        
+        <div class="firework-option active" data-type="rocket" data-color="#FFF" data-name="Classic Rocket">
+            <div class="icon-rocket"></div>
+            <span>Classic Rocket</span>
+        </div>
+
+        <div class="firework-option" data-type="circle" data-color="multi" data-name="Cosmic Swirl">
+            <div class="icon-circle"></div>
+            <span>Cosmic Swirl</span>
+        </div>
+
+        <button id="launch-rangoli-btn">Draw Our Rangoli 🎨</button>
+    </div>
+
+    <div id="rangoli-modal" class="hidden-modal">
+        <div class="modal-content">
+            <span id="close-rangoli-btn" class="close-btn">&times;</span>
+            <h2>Design Our Diwali Welcome</h2>
+            
+            <div id="rangoli-palette">
+                <div class="color-swatch active" data-color="#FFD700"></div>
+                <div class="color-swatch" data-color="#FF4500"></div>
+                <div class="color-swatch" data-color="#00FF7F"></div>
+                <div class="color-swatch" data-color="#9370DB"></div>
+                <div class="color-swatch" data-color="#FFFFFF"></div>
+                <div class="color-swatch" data-color="#222222"></div>
+            </div>
+
+            <canvas id="rangoli-canvas" width="500" height="500"></canvas>
+            
+            <div id="rangoli-actions">
+                <button id="save-design-btn">Capture & Share Code</button>
+                <button id="clear-design-btn">Clear Canvas</button>
+            </div>
+
+            <p id="share-link-message" class="hidden-modal"></p>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
