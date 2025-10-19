@@ -512,7 +512,8 @@ body::before {
 
 
 /* ------------------------------------------------ */
-/* CODED FIREWORK ICONS (NO CHANGE) */
+/* ------------------------------------------------ */
+/* CODED FIREWORK ICONS (FINAL DETAILED VERSION) */
 /* ------------------------------------------------ */
 .icon-heart, .icon-rocket, .icon-circle, .icon-torch {
     width: 20px;
@@ -521,9 +522,11 @@ body::before {
     border-radius: 50%;
 }
 
-/* 1. Heart Icon */
+/* 1. Heart Icon (Love Explosion) - Clearer, more contoured shape */
 .icon-heart {
-    background: #FF69B4;
+    background: #FF69B4; /* Deep Pink (Base body) */
+    /* Adds a small, tight internal shadow to define the shape against the background */
+    box-shadow: inset 0 0 0 2px #FFF, 0 0 10px rgba(255, 105, 180, 0.7); 
     transform: rotate(-45deg);
 }
 .icon-heart::before, .icon-heart::after {
@@ -531,54 +534,82 @@ body::before {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #FF69B4;
+    background: #DC143C; /* Richer Crimson/Red for defined lobes */
     border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* Subtle shadow for 3D depth */
 }
 .icon-heart::before { top: -50%; left: 0; }
 .icon-heart::after { left: 50%; top: 0; }
 
-/* 2. Rocket Icon (Simple star burst) */
+/* 2. Rocket Icon (Juicy Rocket) - Classic Rocket Silhouette */
 .icon-rocket {
-    background: #FFF;
-    box-shadow: 
-        0 -8px 0 0 #FFF, 0 8px 0 0 #FFF, 
-        8px 0 0 0 #FFF, -8px 0 0 0 #FFF;
-    border-radius: 0;
-    width: 2px;
-    height: 2px;
-    animation: pulse 1s infinite alternate;
+    width: 6px;
+    height: 18px;
+    background: #00FFFF; /* Bright Cyan/Silver body */
+    border-radius: 0; 
+    box-shadow: 0 0 5px #00FFFF;
+    transform: rotate(-45deg); /* Pointing up-right */
 }
-@keyframes pulse {
-    from { opacity: 0.8; }
-    to { opacity: 1; transform: scale(1.1); }
+/* Rocket Nose Cone (::before) */
+.icon-rocket::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-bottom: 6px solid #FF4500; /* Red nose */
+    z-index: 2;
+}
+/* Rocket Fin/Flame (::after) - Simple angled fin */
+.icon-rocket::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: -4px;
+    width: 10px;
+    height: 10px;
+    background: #FFD700; /* Gold flame/exhaust effect */
+    transform: skewX(-30deg) rotate(10deg);
+    border-radius: 2px;
+    box-shadow: 0 0 5px #FFD700;
 }
 
-/* 3. Circle Icon (Multi-star burst) */
+/* 3. Circle Icon (Cosmic Swirl/Rainbow) - Retains the dynamic swirl */
 .icon-circle {
-    background: linear-gradient(to right, #FFD700, #FF4500);
-    box-shadow: 0 0 5px 2px #FFF;
+    /* Uses conic-gradient for a visible color swirl/vortex */
+    background: conic-gradient(from 45deg, 
+                #FFD700, 
+                #FF4500, 
+                #9370DB, 
+                #00FFFF, 
+                #FFD700); 
+    box-shadow: 0 0 8px 3px #FFF;
 }
 
-/* 4. Torch Icon */
+/* 4. Torch Icon (Torch of Light) - Highly detailed and robust */
 .icon-torch {
-    width: 15px;
-    height: 25px;
-    background-color: #8B4513; /* Handle */
-    border-radius: 3px 3px 1px 1px;
+    width: 18px; 
+    height: 28px;
+    background-color: #703F0F; /* Darker, richer wood color */
+    border-radius: 4px 4px 1px 1px;
     position: relative;
     margin-right: 5px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5); /* Inner shadow for depth */
 }
-.icon-torch::before { /* Flame for icon */
+.icon-torch::before { /* Flame for icon - Brighter and more detailed */
     content: '';
     position: absolute;
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 10px;
-    height: 15px;
-    background-color: #ff9900;
+    width: 12px; 
+    height: 18px; 
+    background-color: #ffaa00; 
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: 0 0 8px #ff9900;
+    box-shadow: 0 0 12px 3px #ffaa00, 0 0 20px #ffcc00; 
     animation: flicker-icon 1s infinite alternate;
 }
 @keyframes flicker-icon {
