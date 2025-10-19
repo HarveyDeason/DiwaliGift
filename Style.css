@@ -54,7 +54,7 @@ body.torch-active {
     z-index: 99999; 
     
     /* Standard center transform for small firework/dot */
-    transform: translate(0%, 250%) !important; 
+    transform: translate(0%, 0%) !important; 
     
     transition: transform 0.1s ease-out, background-color 0.2s, box-shadow 0.2s; 
     display: block; 
@@ -70,7 +70,7 @@ body.torch-active {
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
     
     /* FINAL CUSTOM ALIGNMENT: Anchors the FLAME TIP to the mouse pointer */
-    transform: translate(-225%, 300%) !important; 
+    transform: translate(-225%, 0%) !important; 
     
     position: relative;
     overflow: visible; /* Allow flame to be outside */
