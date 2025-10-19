@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Diwali, My Love!</title>
+    <title>Happy Diwali Baby!</title>
     
     <link rel="stylesheet" href="Style.css"> 
     
@@ -14,8 +14,10 @@
     <div id="custom-cursor"></div>
     
     <header>
-        <h1>Happy Diwali, My Love!</h1>
-        <p>Your light makes my world brighter. Find the hidden flames...</p>
+        <h1>Happy Diwali Baby!</h1>
+        <p>Your light makes my world brighter. Use the hidden flames to find your future...</p>
+                <p>But be careful.. you don't want to get burned</p>
+
     </header>
 
     <main class="diya-grid">
@@ -24,10 +26,6 @@
             <div class="diya-base" data-video-id="video1">
                 <div class="diya-flame"></div>
             </div>
-            <video id="video1" class="hidden-video" controls loop>
-                <source src="videos/clip1.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
         </div>
 
         
@@ -35,10 +33,6 @@
             <div class="diya-base" data-video-id="video2">
                 <div class="diya-flame"></div>
             </div>
-            <video id="video2" class="hidden-video" controls loop>
-                <source src="videos/clip2.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
         </div>
 
         
@@ -46,34 +40,67 @@
             <div class="diya-base" data-video-id="video3">
                 <div class="diya-flame"></div>
             </div>
-            <video id="video3" class="hidden-video" controls loop>
-                <source src="videos/clip3.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
         </div>
-
         
-        </main>
+</main>
 
     <div id="firework-menu">
         <div class="menu-title">Select Spark:</div>
         
         <div class="firework-option" data-type="heart" data-color="#FF69B4" data-name="Love Bloom">
             <div class="icon-heart"></div>
-            <span>Love Bloom</span>
+            <span>Love Explosion</span>
         </div>
         
         <div class="firework-option active" data-type="rocket" data-color="#FFF" data-name="Classic Rocket">
             <div class="icon-rocket"></div>
-            <span>Classic Rocket</span>
+            <span>Juicy Rocket</span>
         </div>
 
         <div class="firework-option" data-type="circle" data-color="multi" data-name="Cosmic Swirl">
             <div class="icon-circle"></div>
-            <span>Cosmic Swirl</span>
+            <span>Rainbow Power</span>
+        </div>
+
+        <hr style="border-color: #ffd70044; margin: 15px 0;">
+        
+        <div class="firework-option" data-type="torch" data-name="Torch of Light">
+            <div class="icon-torch"></div>
+            <span>Torch</span>
         </div>
         
+    </div>
+    
+    <div id="coded-note-icon">
+        <div id="note-body"></div>
+        <p>Read Me</p>
+    </div>
+
+    <div id="message-modal" class="hidden-modal">
+        <div class="modal-content">
+            <span id="close-message-btn" class="close-btn">&times;</span>
+            <h2>A Diwali Wish</h2>
+            <p id="final-message">
+                Happy Diwali, my darling! A beautiful little glance into the memories we'll make together. 
+                Forever lighting up my life with the love and laughter you bring. 
+                I hope you and your family have the most amazing day together. Forever yours, your Mehboob.💝
+            </p>
         </div>
+    </div>
+
+
+    <video id="video1" class="hidden-video" controls loop>
+        <source src="Videos/Vid1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <video id="video2" class="hidden-video" controls loop>
+        <source src="Videos/Vid2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <video id="video3" class="hidden-video" controls loop>
+        <source src="Videos/Vid3.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
     <script src="Script.js"></script>
 </body>

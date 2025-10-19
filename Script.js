@@ -5,41 +5,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const diyas = document.querySelectorAll('.diya-base');
     const videos = document.querySelectorAll('.hidden-video');
 
-    const extinguishOthers = (currentDiya) => {
-        diyas.forEach(diya => {
-            if (diya !== currentDiya && diya.classList.contains('lit')) {
-                diya.classList.remove('lit');
-                const videoToStop = document.getElementById(diya.dataset.videoId);
-                videoToStop.pause();
-                videoToStop.currentTime = 0;
-            }
+    const extinguishAll = () => {
+        diyas.forEach(diya => diya.classList.remove('lit'));
+        videos.forEach(video => {
+            video.classList.remove('active');
+            video.pause();
+            video.currentTime = 0;
         });
     };
 
     diyas.forEach(diya => {
-        diya.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            
-            const videoId = diya.dataset.videoId;
-            const video = document.getElementById(videoId);
+        const videoId = diya.dataset.videoId;
+        const video = document.getElementById(videoId);
 
-            if (diya.classList.contains('lit')) {
+        const lightDiyaAndShowVideo = () => {
+            if (activeTool !== 'torch') return; // Must be in torch mode
+
+            // Stop any currently playing video/light
+            extinguishAll();
+
+            // Light the current diya and show the current video
+            diya.classList.add('lit');
+            video.classList.add('active');
+            video.play();
+        };
+
+        const extinguishDiyaAndHideVideo = () => {
+            // Only hide/extinguish if the video is paused (user didn't click to keep it open)
+            if (activeTool === 'torch' && video.paused) {
                 diya.classList.remove('lit');
+                video.classList.remove('active');
+            }
+        };
+
+        // Attach mouseenter (hover) and mouseleave listeners for lighting effect
+        diya.addEventListener('mouseenter', lightDiyaAndShowVideo);
+        diya.addEventListener('mouseleave', extinguishDiyaAndHideVideo);
+        
+        // Use a click listener to manually PAUSE/STOP the video when playing
+        diya.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            if (video.paused) {
+                 // If paused, re-play on click
+                 lightDiyaAndShowVideo();
+            } else {
+                 // If playing, stop it
                 video.pause();
                 video.currentTime = 0;
-            } else {
-                extinguishOthers(diya);
-                diya.classList.add('lit');
-                video.play();
-                diya.closest('.hidden-diya-wrapper').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                extinguishAll(); // Ensure all are off
             }
         });
     });
 
     videos.forEach(video => {
         video.addEventListener('ended', () => {
-            const diyaId = video.id;
-            const matchingDiya = document.querySelector(`.diya-base[data-video-id="${diyaId}"]`);
+            // When video ends, hide it and remove the light
+            video.classList.remove('active');
+            const matchingDiya = document.querySelector(`.diya-base[data-video-id="${video.id}"]`);
             if (matchingDiya) {
                 matchingDiya.classList.remove('lit');
             }
@@ -47,50 +70,81 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // -----------------------------------------------------------------
-    // 2. FIREWORK MENU & LAUNCH LOGIC
+    // 2. FIREWORK MENU, TORCH & LAUNCH LOGIC
     // -----------------------------------------------------------------
     const customCursor = document.getElementById('custom-cursor');
     const menuOptions = document.querySelectorAll('.firework-option');
+    const body = document.body; 
     
     const fireworkColors = ['#FFD700', '#FF4500', '#FFA07A', '#1E90FF', '#9370DB', '#00FF7F']; 
     let activeFirework = { type: 'rocket', color: '#FFF' }; 
+    let activeTool = 'firework'; 
+
+    // Initial position to ensure cursor is visible immediately
+    customCursor.style.left = '50vw';
+    customCursor.style.top = '50vh';
+
+    const setFireworkCursor = () => {
+        customCursor.classList.remove('torch-cursor');
+        customCursor.style.width = '10px'; 
+        customCursor.style.height = '10px';
+        customCursor.style.borderRadius = '50%';
+        customCursor.style.backgroundImage = 'none';
+        customCursor.style.transform = 'translate(-50%, -50%)'; 
+        
+        const cursorColor = activeFirework.color === 'multi' ? '#FFF' : activeFirework.color;
+        customCursor.style.backgroundColor = cursorColor;
+        customCursor.style.boxShadow = `0 0 5px ${cursorColor}, 0 0 10px ${cursorColor}`;
+
+        body.classList.remove('torch-active'); // Remove torch glow effect
+    };
+
+    const setTorchCursor = () => {
+        customCursor.classList.add('torch-cursor');
+        body.classList.add('torch-active'); // Add torch glow effect
+    };
+
 
     menuOptions.forEach(option => {
         option.addEventListener('click', () => {
+            extinguishAll(); // Extinguish all videos/lights immediately upon changing the selection
+
             menuOptions.forEach(opt => opt.classList.remove('active'));
             option.classList.add('active');
 
             activeFirework = { type: option.dataset.type, color: option.dataset.color };
+            activeTool = option.dataset.type === 'torch' ? 'torch' : 'firework';
 
-            // Reset cursor to default firework style
-            customCursor.style.display = 'block'; 
-            customCursor.style.width = '10px'; 
-            customCursor.style.height = '10px';
-            customCursor.style.borderRadius = '50%';
-            customCursor.style.backgroundImage = 'none';
-            customCursor.style.transform = 'translate(-50%, -50%)'; 
-            
-            const cursorColor = activeFirework.color === 'multi' ? '#FFF' : activeFirework.color;
-            customCursor.style.backgroundColor = cursorColor;
-            customCursor.style.boxShadow = `0 0 5px ${cursorColor}, 0 0 10px ${cursorColor}`;
+            if (activeTool === 'torch') {
+                setTorchCursor();
+            } else {
+                setFireworkCursor();
+            }
         });
     });
     
+    // Set initial cursor based on default active option
     const defaultOption = document.querySelector('.firework-option.active');
-    if (defaultOption) {
-        const defaultColor = defaultOption.dataset.color === 'multi' ? '#FFF' : defaultOption.dataset.color;
-        customCursor.style.backgroundColor = defaultColor;
-        customCursor.style.boxShadow = `0 0 5px ${defaultColor}, 0 0 10px ${defaultColor}`;
+    if (defaultOption && defaultOption.dataset.type !== 'torch') { 
+        setFireworkCursor();
     }
 
+
     document.addEventListener('mousemove', (e) => {
-        // Since Rangoli is removed, we just move the firework cursor
+        // Update CSS variables for radial gradient glow
+        body.style.setProperty('--mouse-x', `${e.clientX}px`);
+        body.style.setProperty('--mouse-y', `${e.clientY}px`);
+
+        // Update fixed cursor position using viewport coordinates
         customCursor.style.left = `${e.clientX}px`;
         customCursor.style.top = `${e.clientY}px`;
     });
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('#firework-menu') && !e.target.closest('.diya-base')) {
+        // Check if the click is in the menu or on a diya
+        const isInteractiveElement = e.target.closest('#firework-menu') || e.target.closest('.diya-base');
+        
+        if (activeTool === 'firework' && !isInteractiveElement) {
             const { type, color } = activeFirework;
             
             if (type === 'rocket') {
@@ -98,10 +152,93 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 launchShapeFirework(e.clientX, e.clientY, color, type);
             }
+        } 
+        
+        // TORCH FLARE CLICK: If torch is active and clicked in open space
+        else if (activeTool === 'torch' && !isInteractiveElement && !e.target.closest('#coded-note-icon')) {
+            // Only launch flare if not clicking on the note icon with the torch
+            launchTorchFlare(e.clientX, e.clientY);
+        }
+    });
+    
+    // -----------------------------------------------------------------
+    // 3. SECRET MESSAGE/NOTE LOGIC
+    // -----------------------------------------------------------------
+    const codedNoteIcon = document.getElementById('coded-note-icon');
+    const messageModal = document.getElementById('message-modal');
+    const closeMessageBtn = document.getElementById('close-message-btn');
+
+    // --- NEW: TORCH HOVER (DESTRUCTION) LOGIC ---
+    codedNoteIcon.addEventListener('mouseenter', (e) => {
+        if (activeTool === 'torch' && !codedNoteIcon.classList.contains('burning')) {
+            codedNoteIcon.classList.add('burning');
+            // Delay the fire particle launch very slightly to match the hover effect
+            setTimeout(() => {
+                const noteRect = codedNoteIcon.getBoundingClientRect();
+                const noteCenterX = noteRect.left + noteRect.width / 2;
+                const noteCenterY = noteRect.top + noteRect.height / 2;
+                burnLetter(noteCenterX, noteCenterY);
+            }, 100); 
+        }
+    });
+    
+    // --- Message Modal Open Logic (Must use NON-TORCH tool) ---
+    codedNoteIcon.addEventListener('click', (e) => {
+        // Prevent accidental burning if the torch is active
+        if (activeTool === 'torch') return; 
+
+        // If the note hasn't been burned yet, open the message modal
+        messageModal.classList.add('active');
+    });
+
+    closeMessageBtn.addEventListener('click', () => {
+        messageModal.classList.remove('active');
+        // Reset the note icon after closing the message, so it can be revealed again
+        codedNoteIcon.classList.remove('burning');
+        // Reset the note back to original position
+        codedNoteIcon.style.animation = 'none';
+        codedNoteIcon.offsetHeight; // Trigger reflow
+        codedNoteIcon.style.animation = '';
+    });
+    
+    // Close modal if clicked outside
+    window.addEventListener('click', (e) => {
+        if (e.target.id === 'message-modal') {
+            messageModal.classList.remove('active');
+            codedNoteIcon.classList.remove('burning');
+            codedNoteIcon.style.animation = 'none';
+            codedNoteIcon.offsetHeight;
+            codedNoteIcon.style.animation = '';
         }
     });
 
-    // --- Shape Definition Function ---
+    // --- Burning Letter Effect Implementation ---
+    function burnLetter(startX, startY) {
+        for (let i = 0; i < 30; i++) { // Fire particles
+            const fireShard = document.createElement('div');
+            fireShard.classList.add('fire-shard');
+            document.body.appendChild(fireShard);
+
+            fireShard.style.left = `${startX}px`;
+            fireShard.style.top = `${startY}px`;
+
+            const randX = (Math.random() - 0.5) * 150; 
+            const randY = (Math.random() - 0.5) * 100 - 50; 
+            const randDeg = Math.random() * 360;
+
+            fireShard.style.setProperty('--rand-x', `${randX}px`);
+            fireShard.style.setProperty('--rand-y', `${randY}px`);
+            fireShard.style.setProperty('--rand-deg', `${randDeg}deg`);
+            
+            fireShard.style.animationDelay = `${Math.random() * 0.5}s`;
+
+            setTimeout(() => fireShard.remove(), 2000); 
+        }
+        codedNoteIcon.style.animation = 'burn-fade 0.8s forwards'; // Apply fade/burn animation
+    }
+
+
+    // --- Shape Definition Function (Omitted for brevity) ---
     function getShapeCoordinates(type, count, scale = 150) {
         const coordinates = [];
         const baseParticles = count; 
@@ -126,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return coordinates;
     }
 
-    // --- Generic Shape Firework Launcher (Heart and Cosmic Swirl) ---
+    // --- Generic Shape Firework Launcher (Omitted for brevity) ---
     function launchShapeFirework(startX, startY, colorOption, type) {
         const targetCoordinates = getShapeCoordinates(type, 80, 200); 
         const particleSize = type === 'heart' ? 4 : 6; 
@@ -205,7 +342,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, rocketDuration);
     }
-    
-    // NOTE: All previous Rangoli modal functions (openRangoliModal, closeRangoliModal, loadDesignFromURL) 
-    // and listeners have been completely removed.
 });
